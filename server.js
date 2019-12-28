@@ -70,11 +70,23 @@ db.initialize(dbName, collectionName, function (dbCollection) { // successCallba
         });
     });
 
+    server.delete("/items/:id", (request, response) => {
+        const itemId = request.params.id;
+        console.log("Delete item with id: ", itemId);
+
+        dbCollection.deleteOne({ id: itemId }, function (error, result) {
+            if (error) throw error;
+            // send back entire updated list after successful request
+            dbCollection.find().toArray(function (_error, _result) {
+                if (_error) throw _error;
+                response.json(_result);
+            });
+        });
+    });
+
 }, function (err) { // failureCallback
     throw (err);
 });
-
-
 
 server.listen(port, () => {
     console.log(`Server listening at ${port}`);
