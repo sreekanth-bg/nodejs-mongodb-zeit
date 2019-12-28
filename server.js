@@ -55,6 +55,21 @@ db.initialize(dbName, collectionName, function (dbCollection) { // successCallba
         });
     });
 
+    server.put("/items/:id", (request, response) => {
+        const itemId = request.params.id;
+        const item = request.body;
+        console.log("Editing item: ", itemId, " to be ", item);
+
+        dbCollection.updateOne({ id: itemId }, { $set: item }, (error, result) => {
+            if (error) throw error;
+            // send back entire updated list, to make sure frontend data is up-to-date
+            dbCollection.find().toArray(function (_error, _result) {
+                if (_error) throw _error;
+                response.json(_result);
+            });
+        });
+    });
+
 }, function (err) { // failureCallback
     throw (err);
 });
