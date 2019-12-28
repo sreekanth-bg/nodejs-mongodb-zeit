@@ -47,6 +47,14 @@ db.initialize(dbName, collectionName, function (dbCollection) { // successCallba
         });
     });
 
+    server.get("/items", (request, response) => {
+        // return updated list
+        dbCollection.find().toArray((error, result) => {
+            if (error) throw error;
+            response.json(result);
+        });
+    });
+
 }, function (err) { // failureCallback
     throw (err);
 });
